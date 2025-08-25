@@ -1,4 +1,5 @@
-package PACKAGE_NAME;
-
-public class MattyException {
+public class MattyException extends Exception {
+    public MattyException(String message){
+        super(message);
+    }
 }
