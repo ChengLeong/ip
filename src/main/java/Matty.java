@@ -66,9 +66,12 @@ public class Matty {
                         throw new MattyException("OOPS!!! The description of a event cannot be empty.");
                     }
                     String[] eventParts = input.substring(6).split(" /from | /to ", 3);
-                    Task t = new Event(parts[0],
-                            parts.length > 1 ? eventParts[1] : "",
-                            parts.length > 2 ? eventParts[2] : "");
+                    Task t = new Event(
+                            eventParts[0].trim(),
+                            eventParts.length > 1 ? eventParts[1].trim() : "",
+                            eventParts.length > 2 ? eventParts[2].trim() : ""
+                    );
+
                     task.add(t);
                     System.out.println("Got it. I've added this task:");
                     System.out.println("  " + t);
@@ -94,7 +97,5 @@ public class Matty {
             }
     }
 }
-
-
 
 }
