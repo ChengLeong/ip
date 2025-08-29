@@ -6,23 +6,29 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Matty {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        Storage storage = new Storage("./data/matty.txt");
+    private final Ui ui;
+    private final Storage storage;
+    private final TaskList tasks;
 
-        ArrayList<Task> task;
+    public Matty(String filePath) {
+        ui = new Ui();
+        storage = new Storage(filePath);
+
+        TaskList loaded;
         try {
-            task = storage.load();
+            loaded = new TaskList(storage.load());
         } catch (IOException e) {
-            System.out.println("Error loading tasks: " + e.getMessage());
-            task = new ArrayList<>();
+            ui.showError("Error loading tasks: " + e.getMessage());
+            loaded = new TaskList();
         }
-
-        System.out.println("Hello! I'm Matty\nWhat can I do for you?");
+        tasks = loaded;
+    }
+    public void run() {
+        ui.showWelcome();
 
         while (true) {
             try {
-                String input = sc.nextLine();
+                String input = ui.readCommand();
                 String[] parts = input.split(" ", 2);
                 String cmd = parts[0];
 
@@ -31,48 +37,51 @@ public class Matty {
                     break;
                 } else if (input.equals("list")) {
                     System.out.println("Here are the tasks in your list:");
-                    for (int i = 0; i < task.size(); i++) {
-                        System.out.println((i + 1) + "." + task.get(i));
+                    for (int i = 0; i < tasks.size(); i++) {
+                        System.out.println((i + 1) + "." + tasks.get(i));
                     }
                 } else if (cmd.equals("mark")) {
-                    if (parts.length == 1) throw new MattyException("OOPS!!! You have to indicate the item on the list is to be marked");
+                    if (parts.length == 1) throw new MattyException("OOPS!!! You have to indicate which task to mark");
                     int index = Integer.parseInt(parts[1]) - 1;
-                    Task t = task.get(index);
+                    Task t = tasks.get(index);
                     t.markAsDone();
                     System.out.println("Nice! I've marked this task as done:");
                     System.out.println(t);
+
                 } else if (cmd.equals("unmark")) {
-                    if (parts.length == 1) throw new MattyException("OOPS!!! You have to indicate the item on the list is to be unmarked");
+                    if (parts.length == 1) throw new MattyException("OOPS!!! You have to indicate which task to unmark");
                     int index = Integer.parseInt(parts[1]) - 1;
-                    Task t = task.get(index);
+                    Task t = tasks.get(index);
                     t.markAsNotDone();
                     System.out.println("Ok, I've marked this task as not done yet.");
                     System.out.println(t);
+
                 } else if (cmd.equals("todo")) {
                     if (parts.length == 1) throw new MattyException("OOPS!!! The description of a todo cannot be empty.");
-                    Task t = new Todo(input.substring(5));
-                    task.add(t);
+                    Task t = new Todo(parts[1]);
+                    tasks.add(t);
                     System.out.println("Got it. I've added this task:");
                     System.out.println(" " + t);
-                    System.out.println("Now you have " + task.size() + " tasks in the list.");
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+
                 } else if (cmd.equals("deadline")) {
                     if (parts.length == 1) throw new MattyException("OOPS!!! The description of a deadline cannot be empty.");
-                    String[] deadlineParts = input.substring(9).split(" /by ", 2);
+                    String[] deadlineParts = parts[1].split(" /by ", 2);
                     String description = deadlineParts[0].trim();
                     String by = deadlineParts.length > 1 ? deadlineParts[1].trim() : "";
                     try {
                         Task t = new Deadline(description, LocalDate.parse(by));
-                        task.add(t);
+                        tasks.add(t);
                         System.out.println("Got it. I've added this task:");
                         System.out.println("  " + t);
-                        System.out.println("Now you have " + task.size() + " tasks in the list.");
+                        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     } catch (Exception e) {
-                        System.out.println("Invalid date format. Please use yyyy-mm-dd format");
+                        System.out.println("Invalid date format. Please use yyyy-MM-dd format");
                     }
+
                 } else if (cmd.equals("event")) {
-                    if (parts.length == 1)
-                        throw new MattyException("OOPS!!! The description of a event cannot be empty.");
-                    String[] eventParts = input.substring(6).split(" /from | /to ", 3);
+                    if (parts.length == 1) throw new MattyException("OOPS!!! The description of an event cannot be empty.");
+                    String[] eventParts = parts[1].split(" /from | /to ", 3);
                     String description = eventParts[0].trim();
                     String fromStr = eventParts.length > 1 ? eventParts[1].trim() : "";
                     String toStr = eventParts.length > 2 ? eventParts[2].trim() : "";
@@ -84,29 +93,29 @@ public class Matty {
                     try {
                         LocalDateTime from = LocalDateTime.parse(fromStr, inputFormat);
                         LocalDateTime to = LocalDateTime.parse(toStr, inputFormat);
-
                         Task t = new Event(description, from, to);
-                        task.add(t);
-
+                        tasks.add(t);
                         System.out.println("Got it. I've added this task:");
                         System.out.println("  " + t);
-                        System.out.println("Now you have " + task.size() + " tasks in the list.");
+                        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     } catch (java.time.format.DateTimeParseException e) {
-                        System.out.println("Please use the format: yyyy-mm-dd hh:mm (e.g., 2025-09-01 14:00).");
+                        System.out.println("Please use the format: yyyy-MM-dd HH:mm (e.g., 2025-09-01 14:00).");
                     }
+
                 } else if (cmd.equals("delete")) {
-                    if (parts.length == 1) throw new MattyException("OOPS!!! You have to indicate the item on the list is to be deleted");
+                    if (parts.length == 1) throw new MattyException("OOPS!!! You have to indicate which task to delete");
                     int index = Integer.parseInt(parts[1]) - 1;
-                    Task t = task.remove(index);
+                    Task t = tasks.remove(index);
                     System.out.println("Noted. I've removed this task:");
                     System.out.println(" " + t);
-                    System.out.println("Now you have " + task.size() + " tasks in the list.");
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+
                 } else if (cmd.equals("on")) {
                     if (parts.length == 1) throw new MattyException("OOPS!!! Please provide a date in yyyy-MM-dd format.");
                     LocalDate queryDate = LocalDate.parse(parts[1]);
                     System.out.println("Here are the tasks on " + queryDate.format(DateTimeFormatter.ofPattern("MMM d yyyy")) + ":");
                     int count = 1;
-                    for (Task t : task) {
+                    for (Task t : tasks.getAll()) {
                         if (t instanceof Deadline) {
                             LocalDate deadlineDateTime = ((Deadline) t).by;
                             if (deadlineDateTime.equals(queryDate)) {
@@ -124,20 +133,23 @@ public class Matty {
                     if (count == 1) {
                         System.out.println("No tasks found on this date.");
                     }
+
                 } else {
                     throw new MattyException("OOPS!!! I'm sorry, but I don't know what that means :-(");
                 }
-                try {
-                    storage.save(task);
-                } catch (IOException e) {
-                    System.out.println("Error saving tasks: " + e.getMessage());
-                }
+
+                // save tasks after each command
+                storage.save(tasks.getAll());
 
             } catch (MattyException e) {
-                System.out.println(" " + e.getMessage());
+                ui.showError(e.getMessage());
             } catch (Exception e) {
-                System.out.println("Something went wrong: " + e.getMessage());
+                ui.showError("Something went wrong: " + e.getMessage());
             }
         }
+    }
+
+    public static void main(String[] args) {
+        new Matty("data/tasks.txt").run();
     }
 }
