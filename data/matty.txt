@@ -1,4 +1,5 @@
 T | 0 | new task
-D | 0 | return book | Sunday
-E | 0 | project meeting | Mon 2pm | 4pm
-E | 0 | project meeting | Mon 2pm | 4pm
+D | 0 | return book | 2025-09-01
+D | 0 | read book | 2025-09-01
+D | 0 | return book | 2023-07-21
+E | 0 | meeting | 2023-07-21T14:00 | 2023-07-21T15:00
