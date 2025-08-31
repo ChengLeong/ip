@@ -1,27 +1,51 @@
 package matty;
 
+/**
+ * Represents a task with a description and a completion status.
+ */
 public class Task {
     protected String description;
     protected boolean isDone;
 
+    /**
+     * Creates a new Task.
+     *
+     * @param description the description of the task
+     */
     public Task(String description) {
         this.description = description;
         this.isDone = false;
     }
 
+    /**
+     * Marks this task as done.
+     */
     public void markAsDone() {
         isDone = true;
     }
 
+    /**
+     * Marks this task as not done.
+     */
     public void markAsNotDone() {
         isDone = false;
     }
 
+    /**
+     * Returns the string representation of this task.
+     *
+     * @return string containing the status and description of the task
+     */
     @Override
     public String toString() {
         return "[" + (isDone ? "X" : " ") + "] " + description;
     }
 
+    /**
+     * Returns the string representation of this task for file storage.
+     *
+     * @return formatted string for file storage
+     */
     public String toFileString() {
         return "T | " + (isDone ? "1" : "0") + " | " + description;
     }

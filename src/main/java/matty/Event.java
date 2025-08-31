@@ -2,16 +2,34 @@ package matty;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+/**
+ * Represents an event.
+ * Stores the description, start and end time of the event
+ */
 public class Event extends Task {
     protected LocalDateTime from;
     protected LocalDateTime to;
 
+    /**
+     * Creates a new Event task.
+     *
+     * @param description the description of the task
+     * @param from the starting time of the event
+     * @param to the ending time of the event
+     */
     public Event(String description, LocalDateTime from, LocalDateTime to) {
         super(description);
         this.from = from;
         this.to = to;
     }
 
+    /**
+     * Returns the string representation of the event task
+     * including its description and formatted event date and time.
+     *
+     * @return the string representation of the event task
+     */
     @Override
     public String toString() {
         DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
@@ -20,6 +38,12 @@ public class Event extends Task {
                 + " to: " + to.format(outputFormat) + ")";
     }
 
+    /**
+     * Returns the string representation of this event task
+     * formatted for saving to a file.
+     *
+     * @return the string representation formatted for file storage
+     */
     @Override
     public String toFileString() {
         return "E | " + (isDone ? "1" : "0") + " | " + description + " | " + from + " | " + to;

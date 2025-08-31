@@ -5,11 +5,20 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * The main class of the Matty program.
+ * Initializes the components and runs the chatbot loop.
+ */
 public class Matty {
     private final Ui ui;
     private final Storage storage;
     private final TaskList tasks;
 
+    /**
+     * Creates a new Matty chatbot with the given file path.
+     *
+     * @param filePath the path of the file used to store tasks
+     */
     public Matty(String filePath) {
         ui = new Ui();
         storage = new Storage(filePath);
@@ -23,6 +32,10 @@ public class Matty {
         }
         tasks = loaded;
     }
+
+    /**
+     * Runs the main execution loop of the chatbot.
+     */
     public void run() {
         ui.showWelcome();
 
@@ -149,6 +162,9 @@ public class Matty {
         }
     }
 
+    /**
+     * Runs the main execution loop of the chatbot.
+     */
     public static void main(String[] args) {
         new Matty("data/tasks.txt").run();
     }

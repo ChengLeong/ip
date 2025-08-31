@@ -11,15 +11,29 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handles loading tasks from and saving tasks to a file.
+ */
 public class Storage {
     private final Path filePath;
     private final DateTimeFormatter deadlineFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final DateTimeFormatter eventFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+    /**
+     * Creates a Storage object with the given file path.
+     *
+     * @param filePath the file path used to load and save tasks
+     */
     public Storage(String filePath) {
         this.filePath = Paths.get(filePath);
     }
 
+    /**
+     * Saves the given list of tasks to the file.
+     *
+     * @param tasks the list of tasks to save
+     * @throws IOException if the file cannot be written
+     */
     public void save(ArrayList<Task> tasks) throws IOException {
         Files.createDirectories(filePath.getParent());
         List<String> lines = new ArrayList<>();
@@ -29,6 +43,12 @@ public class Storage {
         Files.write(filePath, lines);
     }
 
+    /**
+     * Loads tasks from the file into a list.
+     *
+     * @return the list of tasks loaded from file
+     * @throws IOException if the file cannot be read
+     */
     public ArrayList<Task> load() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
         if (!Files.exists(filePath)) {
@@ -47,6 +67,11 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Parse the string into a Task,
+     * @param line the line to be parsed
+     * @return the corresponding task
+     */
     private Task parseLineToTask(String line) {
         String[] parts = line.split(" \\| ");
         if (parts.length < 3) return null;
