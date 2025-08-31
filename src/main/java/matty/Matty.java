@@ -147,11 +147,25 @@ public class Matty {
                         System.out.println("No tasks found on this date.");
                     }
 
+                } else if (cmd.equals("find")) {
+                    if (parts.length == 1) {
+                        System.out.println("Please provide a keyword to search");
+                    }
+                    String keyword = parts[1].trim();
+                    int count = 1;
+                    for (Task t : tasks.getAll()) {
+                        if (t.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
+                            System.out.println(count + "." + t);
+                            count++;
+                        }
+                    }
+                    if (count == 1) {
+                        System.out.println("No matching tasks found.");
+                    }
                 } else {
                     throw new MattyException("OOPS!!! I'm sorry, but I don't know what that means :-(");
                 }
 
-                // save tasks after each command
                 storage.save(tasks.getAll());
 
             } catch (MattyException e) {

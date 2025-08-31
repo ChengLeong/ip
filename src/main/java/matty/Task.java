@@ -32,6 +32,15 @@ public class Task {
     }
 
     /**
+     * Return the string description of the task
+     *
+     * @return string containing the description of the task
+     */
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
      * Returns the string representation of this task.
      *
      * @return string containing the status and description of the task
