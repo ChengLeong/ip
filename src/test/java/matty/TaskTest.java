@@ -1,15 +1,20 @@
 package matty;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/**
+ * Unit tests for the Task class.
+ */
 public class TaskTest {
 
     @Test
     public void markAsDone_success() {
         Task t = new Task("read book");
         t.markAsDone();
-        assertTrue(t.isDone);
+        assertTrue(t.isDone());
     }
 
     @Test

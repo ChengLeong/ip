@@ -18,6 +18,14 @@ public class Task {
     }
 
     /**
+     * Returns whether this task has been marked as done.
+     *
+     * @return true if the task is done, false otherwise
+     */
+    public boolean isDone() {
+        return this.isDone;
+    }
+    /**
      * Marks this task as done.
      */
     public void markAsDone() {

@@ -11,8 +11,7 @@ public class Ui {
     /**
      * Shows the welcome message to the user.
      */
-    public void showWelcome()
-    {
+    public void showWelcome() {
         System.out.println("Hello! I'm matty.Matty\nWhat can I do for you?");
     }
 
@@ -21,8 +20,7 @@ public class Ui {
      *
      * @param message the error message to display
      */
-    public void showError(String message)
-    {
+    public void showError(String message) {
         System.out.println(" " + message);
     }
 
@@ -31,8 +29,7 @@ public class Ui {
      *
      * @return the user's input string
      */
-    public String readCommand()
-    {
+    public String readCommand() {
         return sc.nextLine();
     }
 }

@@ -1,7 +1,9 @@
 package matty;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.time.LocalDate;
 
 public class DeadlineTest {
@@ -27,7 +29,7 @@ public class DeadlineTest {
     @Test
     public void toFileString_done_success() {
         Deadline d = new Deadline("return book", LocalDate.of(2023, 7, 17));
-        d.markAsDone();  // assuming Task has this method
+        d.markAsDone();
         assertEquals("D | 1 | return book | 2023-07-17", d.toFileString());
     }
 }

@@ -69,12 +69,15 @@ public class Storage {
 
     /**
      * Parse the string into a Task,
+     *
      * @param line the line to be parsed
      * @return the corresponding task
      */
     private Task parseLineToTask(String line) {
         String[] parts = line.split(" \\| ");
-        if (parts.length < 3) return null;
+        if (parts.length < 3) {
+            return null;
+        }
 
         String type = parts[0];
         boolean isDone = parts[1].equals("1");
@@ -83,31 +86,34 @@ public class Storage {
         Task task = null;
 
         switch (type) {
-            case "T":
-                task = new Todo(description);
-                break;
-            case "D":
-                String byStr = parts.length > 3 ? parts[3] : "";
-                try {
-                    LocalDate by = LocalDate.parse(byStr, deadlineFormat);
-                    task = new Deadline(description, by);
-                } catch (DateTimeParseException e) {
-                    System.out.println("Warning: Could not load deadline \"" + description +
-                            "\" due to invalid date format: " + byStr);
-                }
-                break;
-            case "E":
-                String fromStr = parts.length > 3 ? parts[3] : "";
-                String toStr = parts.length > 4 ? parts[4] : "";
-                try {
-                    LocalDateTime from = LocalDateTime.parse(fromStr, eventFormat);
-                    LocalDateTime to = LocalDateTime.parse(toStr, eventFormat);
-                    task = new Event(description, from, to);
-                } catch (DateTimeParseException e) {
-                    System.out.println("Warning: Could not load event \"" + description +
-                            "\" due to invalid date/time format: " + fromStr + " to " + toStr);
-                }
-                break;
+        case "T":
+            task = new Todo(description);
+            break;
+        case "D":
+            String byStr = parts.length > 3 ? parts[3] : "";
+            try {
+                LocalDate by = LocalDate.parse(byStr, deadlineFormat);
+                task = new Deadline(description, by);
+            } catch (DateTimeParseException e) {
+                System.out.println("Warning: Could not load deadline \"" + description
+                        + "\" due to invalid date format: " + byStr);
+            }
+            break;
+        case "E":
+            String fromStr = parts.length > 3 ? parts[3] : "";
+            String toStr = parts.length > 4 ? parts[4] : "";
+            try {
+                LocalDateTime from = LocalDateTime.parse(fromStr, eventFormat);
+                LocalDateTime to = LocalDateTime.parse(toStr, eventFormat);
+                task = new Event(description, from, to);
+            } catch (DateTimeParseException e) {
+                System.out.println("Warning: Could not load event \"" + description
+                        + "\" due to invalid date/time format: " + fromStr + " to " + toStr);
+            }
+            break;
+        default:
+            System.out.println("Warning: Unknown task type \"" + type + "\" for line: " + line);
+            break;
         }
 
         if (task != null && isDone) {

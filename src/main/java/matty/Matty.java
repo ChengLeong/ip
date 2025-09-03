@@ -54,7 +54,9 @@ public class Matty {
                         System.out.println((i + 1) + "." + tasks.get(i));
                     }
                 } else if (cmd.equals("mark")) {
-                    if (parts.length == 1) throw new MattyException("OOPS!!! You have to indicate which task to mark");
+                    if (parts.length == 1) {
+                        throw new MattyException("OOPS!!! You have to indicate which task to mark");
+                    }
                     int index = Integer.parseInt(parts[1]) - 1;
                     Task t = tasks.get(index);
                     t.markAsDone();
@@ -62,7 +64,9 @@ public class Matty {
                     System.out.println(t);
 
                 } else if (cmd.equals("unmark")) {
-                    if (parts.length == 1) throw new MattyException("OOPS!!! You have to indicate which task to unmark");
+                    if (parts.length == 1) {
+                        throw new MattyException("OOPS!!! You have to indicate which task to unmark");
+                    }
                     int index = Integer.parseInt(parts[1]) - 1;
                     Task t = tasks.get(index);
                     t.markAsNotDone();
@@ -70,7 +74,9 @@ public class Matty {
                     System.out.println(t);
 
                 } else if (cmd.equals("todo")) {
-                    if (parts.length == 1) throw new MattyException("OOPS!!! The description of a todo cannot be empty.");
+                    if (parts.length == 1) {
+                        throw new MattyException("OOPS!!! The description of a todo cannot be empty.");
+                    }
                     Task t = new Todo(parts[1]);
                     tasks.add(t);
                     System.out.println("Got it. I've added this task:");
@@ -78,7 +84,9 @@ public class Matty {
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
 
                 } else if (cmd.equals("deadline")) {
-                    if (parts.length == 1) throw new MattyException("OOPS!!! The description of a deadline cannot be empty.");
+                    if (parts.length == 1) {
+                        throw new MattyException("OOPS!!! The description of a deadline cannot be empty.");
+                    }
                     String[] deadlineParts = parts[1].split(" /by ", 2);
                     String description = deadlineParts[0].trim();
                     String by = deadlineParts.length > 1 ? deadlineParts[1].trim() : "";
@@ -93,7 +101,9 @@ public class Matty {
                     }
 
                 } else if (cmd.equals("event")) {
-                    if (parts.length == 1) throw new MattyException("OOPS!!! The description of an event cannot be empty.");
+                    if (parts.length == 1) {
+                        throw new MattyException("OOPS!!! The description of an event cannot be empty.");
+                    }
                     String[] eventParts = parts[1].split(" /from | /to ", 3);
                     String description = eventParts[0].trim();
                     String fromStr = eventParts.length > 1 ? eventParts[1].trim() : "";
@@ -116,7 +126,9 @@ public class Matty {
                     }
 
                 } else if (cmd.equals("delete")) {
-                    if (parts.length == 1) throw new MattyException("OOPS!!! You have to indicate which task to delete");
+                    if (parts.length == 1) {
+                        throw new MattyException("OOPS!!! You have to indicate which task to delete");
+                    }
                     int index = Integer.parseInt(parts[1]) - 1;
                     Task t = tasks.remove(index);
                     System.out.println("Noted. I've removed this task:");
@@ -124,9 +136,12 @@ public class Matty {
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
 
                 } else if (cmd.equals("on")) {
-                    if (parts.length == 1) throw new MattyException("OOPS!!! Please provide a date in yyyy-MM-dd format.");
+                    if (parts.length == 1) {
+                        throw new MattyException("OOPS!!! Please provide a date in yyyy-MM-dd format.");
+                    }
                     LocalDate queryDate = LocalDate.parse(parts[1]);
-                    System.out.println("Here are the tasks on " + queryDate.format(DateTimeFormatter.ofPattern("MMM d yyyy")) + ":");
+                    System.out.println("Here are the tasks on "
+                            + queryDate.format(DateTimeFormatter.ofPattern("MMM d yyyy")) + ":");
                     int count = 1;
                     for (Task t : tasks.getAll()) {
                         if (t instanceof Deadline) {
@@ -181,5 +196,153 @@ public class Matty {
      */
     public static void main(String[] args) {
         new Matty("data/tasks.txt").run();
+    }
+
+    public String getResponse(String input) {
+        try {
+            String[] parts = input.split(" ", 2);
+            String cmd = parts[0];
+
+            if (input.equals("bye")) {
+                return "Bye. Hope to see you again soon!";
+            } else if (input.equals("list")) {
+                StringBuilder sb = new StringBuilder("Here are the tasks in your list:\n");
+                for (int i = 0; i < tasks.size(); i++) {
+                    sb.append((i + 1)).append(".").append(tasks.get(i)).append("\n");
+                }
+                return sb.toString().trim();
+            } else if (cmd.equals("mark")) {
+                if (parts.length == 1) {
+                    throw new MattyException("OOPS!!! You have to indicate which task to mark");
+                }
+                int index = Integer.parseInt(parts[1]) - 1;
+                Task t = tasks.get(index);
+                t.markAsDone();
+                return "Nice! I've marked this task as done:\n" + t;
+
+            } else if (cmd.equals("unmark")) {
+                if (parts.length == 1) {
+                    throw new MattyException("OOPS!!! You have to indicate which task to unmark");
+                }
+                int index = Integer.parseInt(parts[1]) - 1;
+                Task t = tasks.get(index);
+                t.markAsNotDone();
+                return "Ok, I've marked this task as not done yet." + t;
+            } else if (cmd.equals("todo")) {
+                if (parts.length == 1) {
+                    throw new MattyException("OOPS!!! The description of a todo cannot be empty.");
+                }
+                Task t = new Todo(parts[1]);
+                tasks.add(t);
+                return "Got it. I've added this task: " + t + "\n" +
+                        "Now you have " + tasks.size() + " tasks in the list.";
+            } else if (cmd.equals("deadline")) {
+                if (parts.length == 1) {
+                    throw new MattyException("OOPS!!! The description of a deadline cannot be empty.");
+                }
+                String[] deadlineParts = parts[1].split(" /by ", 2);
+                String description = deadlineParts[0].trim();
+                String by = deadlineParts.length > 1 ? deadlineParts[1].trim() : "";
+                try {
+                    Task t = new Deadline(description, LocalDate.parse(by));
+                    tasks.add(t);
+                    return "Got it. I've added this task:\n"+ t + "\n"
+                    + "Now you have " + tasks.size() + " tasks in the list.";
+                } catch (Exception e) {
+                    return "Invalid date format. Please use yyyy-MM-dd format";
+                }
+
+            } else if (cmd.equals("event")) {
+                if (parts.length == 1) {
+                    throw new MattyException("OOPS!!! The description of an event cannot be empty.");
+                }
+                String[] eventParts = parts[1].split(" /from | /to ", 3);
+                String description = eventParts[0].trim();
+                String fromStr = eventParts.length > 1 ? eventParts[1].trim() : "";
+                String toStr = eventParts.length > 2 ? eventParts[2].trim() : "";
+                if (fromStr.isEmpty() || toStr.isEmpty()) {
+                    return "Please provide both /from and /to times in format yyyy-MM-dd HH:mm";
+
+                }
+                DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                try {
+                    LocalDateTime from = LocalDateTime.parse(fromStr, inputFormat);
+                    LocalDateTime to = LocalDateTime.parse(toStr, inputFormat);
+                    Task t = new Event(description, from, to);
+                    tasks.add(t);
+                    return "Got it. I've added this task: " + t + "\n"
+                    + "Now you have " + tasks.size() + " tasks in the list.";
+                } catch (java.time.format.DateTimeParseException e) {
+                    return "Please use the format: yyyy-MM-dd HH:mm (e.g., 2025-09-01 14:00).";
+                }
+
+            } else if (cmd.equals("delete")) {
+                if (parts.length == 1) {
+                    throw new MattyException("OOPS!!! You have to indicate which task to delete");
+                }
+                int index = Integer.parseInt(parts[1]) - 1;
+                Task t = tasks.remove(index);
+                return "Noted. I've removed this task: "+ t + "\n"
+                + "Now you have " + tasks.size() + " tasks in the list.";
+
+            } else if (cmd.equals("on")) {
+                if (parts.length == 1) {
+                    throw new MattyException("OOPS!!! Please provide a date in yyyy-MM-dd format.");
+                }
+                LocalDate queryDate = LocalDate.parse(parts[1]);
+                String on = "Here are the tasks on "
+                        + queryDate.format(DateTimeFormatter.ofPattern("MMM d yyyy")) + ":\n";
+                int count = 1;
+                for (Task t : tasks.getAll()) {
+                    if (t instanceof Deadline) {
+                        LocalDate deadlineDateTime = ((Deadline) t).by;
+                        if (deadlineDateTime.equals(queryDate)) {
+                            on += String.format(count + "." + t +"\n");
+                            count++;
+                        }
+                    } else if (t instanceof Event) {
+                        LocalDateTime eventDateTime = ((Event) t).from;
+                        if (eventDateTime.toLocalDate().equals(queryDate)) {
+                            on += String.format(count + "." + t + "\n");
+                            count++;
+                        }
+                    }
+                }
+                if (count == 1) {
+                    return "No tasks found on this date.";
+                }
+                return on;
+            } else if (cmd.equals("find")) {
+                if (parts.length == 1) {
+                    return "Please provide a keyword to search";
+                }
+                String keyword = parts[1].trim();
+                int count = 1;
+                String find = "";
+                for (Task t : tasks.getAll()) {
+                    if (t.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
+                        find += String.format(count + "." + t + "\n");
+                        count++;
+                    }
+                }
+                if (count == 1) {
+                    return "No matching tasks found.";
+                }
+                return find;
+            } else {
+                throw new MattyException("OOPS!!! I'm sorry, but I don't know what that means :-(");
+            }
+
+        } catch (MattyException e) {
+            return e.getMessage();
+        } catch (Exception e) {
+            return "Something went wrong: " + e.getMessage();
+        } finally {
+            try {
+                storage.save(tasks.getAll());
+            } catch (Exception ignored) {
+                // avoid crashing if save fails
+            }
+        }
     }
 }
