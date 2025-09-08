@@ -74,6 +74,7 @@ public class Storage {
      * @return the corresponding task
      */
     private Task parseLineToTask(String line) {
+        assert line != null : "Storage line should not be null";
         String[] parts = line.split(" \\| ");
         if (parts.length < 3) {
             return null;
