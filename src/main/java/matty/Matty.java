@@ -290,20 +290,20 @@ public class Matty {
                     throw new MattyException("OOPS!!! Please provide a date in yyyy-MM-dd format.");
                 }
                 LocalDate queryDate = LocalDate.parse(parts[1]);
-                String on = "Here are the tasks on "
-                        + queryDate.format(DateTimeFormatter.ofPattern("MMM d yyyy")) + ":\n";
+                StringBuilder on = new StringBuilder("Here are the tasks on "
+                        + queryDate.format(DateTimeFormatter.ofPattern("MMM d yyyy")) + ":\n");
                 int count = 1;
                 for (Task t : tasks.getAll()) {
                     if (t instanceof Deadline) {
                         LocalDate deadlineDateTime = ((Deadline) t).by;
                         if (deadlineDateTime.equals(queryDate)) {
-                            on += String.format(count + "." + t +"\n");
+                            on.append(String.format(count + "." + t + "\n"));
                             count++;
                         }
                     } else if (t instanceof Event) {
                         LocalDateTime eventDateTime = ((Event) t).from;
                         if (eventDateTime.toLocalDate().equals(queryDate)) {
-                            on += String.format(count + "." + t + "\n");
+                            on.append(String.format(count + "." + t + "\n"));
                             count++;
                         }
                     }
@@ -311,24 +311,24 @@ public class Matty {
                 if (count == 1) {
                     return "No tasks found on this date.";
                 }
-                return on;
+                return on.toString();
             } else if (cmd.equals("find")) {
                 if (parts.length == 1) {
                     return "Please provide a keyword to search";
                 }
                 String keyword = parts[1].trim();
                 int count = 1;
-                String find = "";
+                StringBuilder find = new StringBuilder();
                 for (Task t : tasks.getAll()) {
                     if (t.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
-                        find += String.format(count + "." + t + "\n");
+                        find.append(String.format(count + "." + t + "\n"));
                         count++;
                     }
                 }
                 if (count == 1) {
                     return "No matching tasks found.";
                 }
-                return find;
+                return find.toString();
             } else {
                 throw new MattyException("OOPS!!! I'm sorry, but I don't know what that means :-(");
             }
