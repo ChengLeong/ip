@@ -21,6 +21,7 @@ public class Ui {
      * @param message the error message to display
      */
     public void showError(String message) {
+        assert message != null : "UI message should not be null";
         System.out.println(" " + message);
     }
 

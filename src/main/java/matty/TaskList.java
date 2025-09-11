@@ -31,7 +31,9 @@ public class TaskList {
      * @param task the task to add
      */
     public void add(Task task) {
+        int oldSize = tasks.size();
         tasks.add(task);
+        assert tasks.size() == oldSize + 1 : "Task list size should increase after adding a task";
     }
 
     /**
