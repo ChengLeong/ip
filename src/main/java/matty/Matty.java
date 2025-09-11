@@ -329,6 +329,51 @@ public class Matty {
                     return "No matching tasks found.";
                 }
                 return find;
+            } else if (cmd.equals("update")){
+                if (parts.length == 1) {
+                    return "OOPS!!! You must specify which task to edit and what to change.";
+                }
+
+                String[] editParts = parts[1].split(" ", 3);
+                int index = Integer.parseInt(editParts[0]) - 1;
+
+                if (index < 0 || index >= tasks.size()) {
+                    return "Invalid task number.";
+                }
+
+                Task t = tasks.get(index);
+
+                if (editParts.length == 1) {
+                    return "OOPS!!! You must provide details to edit.";
+                }
+
+                String type = editParts[1];
+
+                if (type.equals("desc/")) {
+                    String newDesc = editParts[2];
+                    t.setDescription(newDesc);
+                    return "Got it. I've updated the description:\n" + t;
+                } else if (type.equals("by/") && t instanceof Deadline) {
+                    String newBy = editParts[2];
+                    LocalDate newDate = LocalDate.parse(newBy);
+                    ((Deadline) t).setBy(newDate);
+                    return "Got it. I've updated the deadline:\n" + t;
+                } else if (type.equals("from/") && t instanceof Event){
+                    String[] timeParts = type.split(" to/", 2);
+                    if (timeParts.length < 2) {
+                            return "Please provide both from/ and to/ times in format yyyy-MM-dd HH:mm";
+                    }
+                    LocalDateTime newFrom = LocalDateTime.parse(timeParts[0].substring(5).trim(),
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+                    LocalDateTime newTo = LocalDateTime.parse(timeParts[1].trim(),
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+                    ((Event) t).setFrom(newFrom);
+                    ((Event) t).setTo(newTo);
+                    return "Got it. I've updated the event:\n" + t;
+                } else {
+                    return "OOPS!!! Unsupported update command for this task type.";
+                }
+
             } else {
                 throw new MattyException("OOPS!!! I'm sorry, but I don't know what that means :-(");
             }

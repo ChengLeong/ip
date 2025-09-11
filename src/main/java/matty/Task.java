@@ -51,6 +51,14 @@ public class Task {
     }
 
     /**
+     * Change the description of the task
+     * @param newDescription the new description of the task
+     */
+    public void setDescription(String newDescription){
+        this.description = newDescription;
+    }
+
+    /**
      * Returns the string representation of this task.
      *
      * @return string containing the status and description of the task
