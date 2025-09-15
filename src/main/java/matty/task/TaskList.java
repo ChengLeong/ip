@@ -1,4 +1,4 @@
-package matty;
+package matty.task;
 
 import java.util.ArrayList;
 
@@ -72,5 +72,14 @@ public class TaskList {
      */
     public ArrayList<Task> getAll() {
         return tasks;
+    }
+
+    /**
+     *
+     * @return boolean showing if the Task List is empty
+     */
+    public boolean isEmpty() {
+        boolean b = tasks.size() == 0;
+        return b;
     }
 }

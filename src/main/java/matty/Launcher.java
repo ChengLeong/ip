@@ -1,6 +1,7 @@
 package matty;
 
 import javafx.application.Application;
+import matty.ui.Main;
 
 /**
  * A launcher class to workaround classpath issues.

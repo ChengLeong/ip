@@ -1,4 +1,4 @@
-package matty;
+package matty.ui;
 
 import java.io.IOException;
 

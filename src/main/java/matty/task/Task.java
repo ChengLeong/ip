@@ -1,4 +1,4 @@
-package matty;
+package matty.task;
 
 /**
  * Represents a task with a description and a completion status.
@@ -14,7 +14,7 @@ public class Task {
      */
     public Task(String description) {
         assert description != null : "Task description should not be null";
-        assert !description.trim().isEmpty() : "Task desctiption should not be empty";
+        assert !description.trim().isEmpty() : "Task description should not be empty";
         this.description = description;
         this.isDone = false;
     }
@@ -48,6 +48,14 @@ public class Task {
      */
     public String getDescription() {
         return this.description;
+    }
+
+    /**
+     * Change the description of the task
+     * @param newDescription the new description of the task
+     */
+    public void setDescription(String newDescription){
+        this.description = newDescription;
     }
 
     /**
