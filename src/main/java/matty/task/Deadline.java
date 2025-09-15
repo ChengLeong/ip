@@ -1,4 +1,4 @@
-package matty;
+package matty.task;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -30,6 +30,14 @@ public class Deadline extends Task {
     public String toString() {
         DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("MMM dd yyyy");
         return "[D]" + super.toString() + " (by: " + by.format(outputFormat) + ")";
+    }
+
+    /**
+     * Set the deadline of the task to a new deadline
+     * @param newBy the new deadline
+     */
+    public void setBy(LocalDate newBy){
+        this.by = newBy;
     }
     /**
      * Returns the string representation of this deadline task

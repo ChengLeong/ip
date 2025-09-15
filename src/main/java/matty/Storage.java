@@ -1,5 +1,10 @@
 package matty;
 
+import matty.task.Deadline;
+import matty.task.Event;
+import matty.task.Task;
+import matty.task.Todo;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

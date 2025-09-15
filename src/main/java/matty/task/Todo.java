@@ -1,4 +1,4 @@
-package matty;
+package matty.task;
 
 /**
  * Represents a simple to-do task.
