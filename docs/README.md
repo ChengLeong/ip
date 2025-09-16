@@ -1,6 +1,6 @@
 # Matty User Guide
 
-![Matty.png](../src/main/resources/Images/Matty.png)
+![Ui.png](Ui.png)
 
 Matty is a task management chatbot that helps you keep track of your **Todos, Deadlines, and Events** efficiently. You can add, update, mark/unmark, delete, and list tasks directly through simple text commands.
 
